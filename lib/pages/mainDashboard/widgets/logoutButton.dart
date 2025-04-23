@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness/pages/beforeLoginPages/first_screen.dart';
+import 'package:fitness/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 class LogoutButton extends StatelessWidget {
@@ -9,6 +11,11 @@ class LogoutButton extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: () {
         _auth.signOut();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+          (route) => false, // This removes all previous screens from the stack
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.redAccent,

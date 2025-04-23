@@ -1,10 +1,13 @@
-import 'package:fitness/pages/dashboardpages/WelcomePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CompleteProfilePage extends StatefulWidget {
+  final VoidCallback onComplete;
+
+  const CompleteProfilePage({super.key, required this.onComplete});
+
   @override
   _CompleteProfilePageState createState() => _CompleteProfilePageState();
 }
@@ -65,11 +68,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           SnackBar(content: Text("Profile updated successfully!")),
         );
 
-        // ✅ Navigate to WelcomePage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => WelcomePage()),
-        );
+        widget.onComplete(); // Notify parent to refresh state
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -137,7 +136,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     _unitTag("CM"),
                   ],
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _saveProfile,
                   style: ElevatedButton.styleFrom(
@@ -168,12 +167,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Next",
+                          Text("Update",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)),
-                          SizedBox(width: 8),
-                          Icon(CupertinoIcons.arrow_right, color: Colors.white),
                         ],
                       ),
                     ),

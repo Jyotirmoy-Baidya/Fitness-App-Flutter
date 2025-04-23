@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness/pages/beforeLoginPages/first_screen.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
+import 'package:fitness/pages/mainDashboard/screens/dashboard_screen.dart';
 import 'package:fitness/pages/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -34,7 +35,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _user != null ? CompleteProfilePage() : _googleSignInButton(),
+      body: _user != null
+          ? const DashboardScreen(
+              userName: 'Sarthak',
+            )
+          : _googleSignInButton(),
     );
   }
 
