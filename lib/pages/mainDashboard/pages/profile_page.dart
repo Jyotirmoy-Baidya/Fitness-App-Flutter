@@ -53,6 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
         title: const Text('Profile',
             style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFFFF7C7C),
+        centerTitle: true,
       ),
       backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(

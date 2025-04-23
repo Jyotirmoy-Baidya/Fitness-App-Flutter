@@ -37,4 +37,7 @@ flutter:
     - assets/images/profile.png
     - assets/images/welcome-fitness.png
     - assets/images/home-bubble.png
-    - assets/bmi-bg.png
+    - assets/images/bmi-bg.png
+    - assets/sleep/
+    - assets/icons/
+    - assets/images/meal.png

@@ -96,6 +96,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
         title: const Text('Latest Activity',
             style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFFFF7C7C),
+        centerTitle: true,
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

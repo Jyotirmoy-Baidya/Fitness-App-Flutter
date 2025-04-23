@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
+import 'package:fitness/pages/mainDashboard/pages/SleepTrackerPage.dart';
 import 'package:fitness/pages/mainDashboard/pages/activities_page.dart';
 import 'package:fitness/pages/mainDashboard/pages/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -68,8 +69,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 0:
         return _buildHomeDashboard();
       case 1:
-        return ActivitiesPage();
+        return SleepTrackerPage();
       case 2:
+        return ActivitiesPage();
+      case 3:
         return ProfilePage();
       default:
         return _buildHomeDashboard();
@@ -96,7 +99,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 12),
           ActivityStatusSection(),
           SizedBox(height: 20),
-          SizedBox(height: 20),
+          Image.asset(
+            'assets/images/meal.png',
+            width: double.infinity,
+            // fit: BoxFit.fitWidth,
+          ),
         ],
       ),
     );
@@ -127,11 +134,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
         selectedItemColor: Colors.pinkAccent,
         unselectedItemColor: Colors.grey,
         onTap: _onNavBarTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+        items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.check_circle_outline), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ''),
+            icon: Image.asset(
+              'assets/icons/1.png',
+              width: 28,
+              height: 28,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/icons/2.png',
+              width: 28,
+              height: 28,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/icons/3.png',
+              width: 28,
+              height: 28,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/icons/4.png',
+              width: 28,
+              height: 28,
+            ),
+            label: '',
+          ),
         ],
       ),
     );

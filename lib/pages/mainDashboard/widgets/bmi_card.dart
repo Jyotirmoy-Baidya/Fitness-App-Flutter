@@ -84,7 +84,10 @@ class _BmiWidgetState extends State<BmiWidget> {
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Color(0xFFFFFF), Colors.purpleAccent],
+                            colors: [
+                              Color.fromARGB(0, 0, 0, 0),
+                              Colors.purpleAccent
+                            ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
