@@ -96,7 +96,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 12),
           ActivityStatusSection(),
           SizedBox(height: 20),
-          LogoutButton(),
           SizedBox(height: 20),
         ],
       ),
