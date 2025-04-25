@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormAfterRegister.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
+import 'package:fitness/pages/mainDashboard/containers/WaterIntake.dart';
+import 'package:fitness/pages/mainDashboard/containers/WorkoutTracker.dart';
 import 'package:fitness/pages/mainDashboard/pages/SleepTrackerPage.dart';
 import 'package:fitness/pages/mainDashboard/pages/activities_page.dart';
 import 'package:fitness/pages/mainDashboard/pages/profile_page.dart';
@@ -70,9 +72,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 0:
         return _buildHomeDashboard();
       case 1:
-        return SleepTrackerPage();
-      case 2:
         return ActivitiesPage();
+      case 2:
+        return SleepTrackerPage();
       case 3:
         return ProfilePage();
       default:
@@ -95,11 +97,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 12),
           ActivityStatusSection(),
           SizedBox(height: 20),
-          Image.asset(
-            'assets/images/meal.png',
-            width: double.infinity,
-            // fit: BoxFit.fitWidth,
-          ),
+          WaterIntakeTracker(),
+          SizedBox(height: 20),
+          WorkoutTracker(),
         ],
       ),
     );
@@ -130,10 +130,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         selectedItemColor: Colors.pinkAccent,
         unselectedItemColor: Colors.grey,
         onTap: _onNavBarTapped,
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/1.png',
+              _selectedIndex == 0
+                  ? 'assets/icons/1active.png'
+                  : 'assets/icons/1.png',
               width: 28,
               height: 28,
             ),
@@ -141,7 +144,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/2.png',
+              _selectedIndex == 1
+                  ? 'assets/icons/2active.png'
+                  : 'assets/icons/2.png',
               width: 28,
               height: 28,
             ),
@@ -149,7 +154,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/3.png',
+              _selectedIndex == 2
+                  ? 'assets/icons/3active.png'
+                  : 'assets/icons/3.png',
               width: 28,
               height: 28,
             ),
@@ -157,7 +164,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/icons/4.png',
+              _selectedIndex == 3
+                  ? 'assets/icons/4active.png'
+                  : 'assets/icons/4.png',
               width: 28,
               height: 28,
             ),

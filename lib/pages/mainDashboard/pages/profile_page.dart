@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness/pages/beforeLoginPages/first_screen.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
 import 'package:fitness/pages/mainDashboard/pages/AccountSettingsContainer.dart';
-import 'package:fitness/pages/mainDashboard/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -48,6 +48,140 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void _showBottomSheet(String type) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        if (type == "personal") {
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _infoTile("Username", _userData?['username'] ?? 'N/A'),
+                _infoTile("Email", _userData?['email'] ?? 'N/A'),
+                _infoTile("Height", "${_userData?['height'] ?? '--'} cm"),
+                _infoTile("Weight", "${_userData?['weight'] ?? '--'} kg"),
+                _infoTile("Gender", _userData?['gender'] ?? 'N/A'),
+              ],
+            ),
+          );
+        } else if (type == "workout") {
+          final today = DateTime.now();
+          final docId =
+              "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
+
+          final workoutRef = FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .collection('workouts')
+              .doc(docId)
+              .collection('items')
+              .orderBy('timestamp', descending: true);
+
+          return StreamBuilder(
+            stream: workoutRef.snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Center(child: CircularProgressIndicator());
+              final workouts = snapshot.data!.docs;
+
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: workouts.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    return ListTile(
+                      leading: Icon(Icons.fitness_center, color: Colors.purple),
+                      title: Text(data['title'] ?? ''),
+                      subtitle: Text(
+                          "${data['duration']} min · ${data['calories']} cal"),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          );
+        } else if (type == "history") {
+          final activityRef = FirebaseFirestore.instance
+              .collection('users')
+              .doc(user!.uid)
+              .collection('activities') // Using 'activities' instead of 'logs'
+              .orderBy('timestamp', descending: true);
+          return StreamBuilder(
+            stream: activityRef.snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return Center(child: CircularProgressIndicator());
+              final activities = snapshot.data!.docs;
+
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: activities.map((doc) {
+                    final data = doc.data() as Map<String, dynamic>;
+                    final time = (data['timestamp'] as Timestamp).toDate();
+                    return ListTile(
+                      leading: Icon(Icons.check_circle,
+                          color:
+                              data['completed'] ? Colors.green : Colors.grey),
+                      title: Text(data['title'] ?? ''),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(data['description'] ?? ''),
+                          SizedBox(height: 4),
+                          Text(
+                            timeago.format(data['timestamp'].toDate()),
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      trailing: Checkbox(
+                        value: data['completed'] ?? false,
+                        onChanged: (_) => toggleActivityStatus(
+                            doc.reference, data['completed']),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          );
+        }
+
+        return Center(child: Text("No data"));
+      },
+    );
+  }
+
+  Future<void> toggleActivityStatus(
+      DocumentReference activityRef, bool currentStatus) async {
+    try {
+      await activityRef.update({'completed': !currentStatus});
+    } catch (e) {
+      debugPrint('Failed to update activity status: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to update activity.")),
+      );
+    }
+  }
+
+  Widget _infoTile(String label, String value) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: Text(label),
+      subtitle: Text(value, style: TextStyle(fontWeight: FontWeight.bold)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,13 +195,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
-                    Text(
-                      "Profile",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    Text("Profile",
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 16),
                     ListTile(
                       leading: CircleAvatar(
@@ -104,9 +234,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => CompleteProfilePage(
-                                      onComplete: () {},
-                                    )),
+                              builder: (_) => CompleteProfilePage(
+                                onComplete: () {},
+                              ),
+                            ),
                           );
                         },
                         child: const Text("Edit"),
@@ -124,8 +255,28 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    AccountSettingsContainer(),
-                    SizedBox(height: 30),
+
+                    /// Section for triggering modals
+                    ListTile(
+                      leading: Icon(Icons.person_outline, color: Colors.green),
+                      title: Text("Personal Data"),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () => _showBottomSheet("personal"),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.emoji_events, color: Colors.orange),
+                      title: Text("Workout"),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () => _showBottomSheet("workout"),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.history, color: Colors.blue),
+                      title: Text("Activity History"),
+                      trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () => _showBottomSheet("history"),
+                    ),
+
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFF7C7C),
@@ -174,10 +325,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 5),
-            Text(
-              label,
-              style: const TextStyle(color: Colors.grey),
-            ),
+            Text(label, style: const TextStyle(color: Colors.grey)),
           ],
         ),
       ),

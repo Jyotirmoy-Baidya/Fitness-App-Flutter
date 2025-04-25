@@ -1,11 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fitness/pages/beforeLoginPages/GetBurnScreen.dart';
-import 'package:fitness/pages/beforeLoginPages/TrackGoalScreen.dart';
 import 'package:fitness/firebase_options.dart';
 import 'package:fitness/pages/beforeLoginPages/first_screen.dart';
-import 'package:fitness/pages/home_page.dart';
-import 'package:fitness/pages/mainDashboard/pages/ActivityTrackerPage.dart';
-import 'package:fitness/pages/mainDashboard/screens/dashboard_screen.dart';
+import 'package:fitness/pages/mainDashboard/containers/WorkoutTracker.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
