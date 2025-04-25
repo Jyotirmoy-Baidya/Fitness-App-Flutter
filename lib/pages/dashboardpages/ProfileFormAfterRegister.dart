@@ -1,22 +1,20 @@
-// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
-
 import 'package:fitness/pages/dashboardpages/WelcomePage.dart';
-import 'package:fitness/pages/mainDashboard/pages/profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CompleteProfilePage extends StatefulWidget {
+class ProfileFormAfterRegister extends StatefulWidget {
   final VoidCallback onComplete;
 
-  const CompleteProfilePage({super.key, required this.onComplete});
+  const ProfileFormAfterRegister({super.key, required this.onComplete});
 
   @override
-  _CompleteProfilePageState createState() => _CompleteProfilePageState();
+  _ProfileFormAfterRegisterState createState() =>
+      _ProfileFormAfterRegisterState();
 }
 
-class _CompleteProfilePageState extends State<CompleteProfilePage> {
+class _ProfileFormAfterRegisterState extends State<ProfileFormAfterRegister> {
   final _formKey = GlobalKey<FormState>();
   String? _username;
   String? _gender;
@@ -44,12 +42,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       if (doc.exists) {
         final data = doc.data()!;
         setState(() {
-          _username = data['username']?.toString();
+          _username = data['username'];
           _gender = data['gender'];
           _dob = DateTime.tryParse(data['date_of_birth'] ?? '');
           _weight = data['weight']?.toString();
           _height = data['height']?.toString();
-          usernameController.text = _username ?? '';
+
           weightController.text = _weight ?? '';
           heightController.text = _height ?? '';
         });
@@ -74,15 +72,22 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         }, SetOptions(merge: true));
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Profile updated successfully!")),
+          SnackBar(content: Text("Profile updated successfully!")),
         );
 
         widget.onComplete(); // Notify parent to refresh state
 
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => WelcomePage(
+                    userName: _username!,
+                  )),
+        );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please complete all fields")),
+        SnackBar(content: Text("Please complete all fields")),
       );
     }
   }
@@ -100,19 +105,19 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset('assets/images/fitness-lady.png', height: 200),
-                const SizedBox(height: 20),
-                const Text(
+                SizedBox(height: 20),
+                Text(
                   "Let’s complete your profile",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Text(
                   "It will help us to know more about you!",
                   style: TextStyle(color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
@@ -125,11 +130,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 _buildDOB(),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 _buildDropdown(),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
@@ -140,11 +145,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         onChanged: (value) => _weight = value,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _unitTag("KG"),
                   ],
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
@@ -155,15 +160,15 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         onChanged: (value) => _height = value,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     _unitTag("CM"),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _saveProfile,
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: EdgeInsets.symmetric(vertical: 14),
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
                     shape: RoundedRectangleBorder(
@@ -172,7 +177,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   ),
                   child: Ink(
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [Color(0xFFFF7676), Color(0xFFFFA8A8)],
                       ),
                       borderRadius: BorderRadius.circular(30),
@@ -180,7 +185,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         BoxShadow(
                           color: Colors.pinkAccent.withOpacity(0.3),
                           blurRadius: 10,
-                          offset: const Offset(0, 5),
+                          offset: Offset(0, 5),
                         )
                       ],
                     ),
@@ -189,8 +194,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       alignment: Alignment.center,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text("Update",
+                        children: [
+                          Text("Next",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)),
@@ -210,7 +215,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   Widget _buildDropdown() {
     return Container(
       height: 56,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: _inputDecoration(),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -218,8 +223,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           hint: Row(
             children: [
               Image.asset('assets/profileicons/profile.png', height: 24),
-              const SizedBox(width: 12),
-              const Text("Choose Gender"),
+              SizedBox(width: 12),
+              Text("Choose Gender"),
             ],
           ),
           value: _gender,
@@ -245,12 +250,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       },
       child: Container(
         height: 56,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         decoration: _inputDecoration(),
         child: Row(
           children: [
             Image.asset('assets/profileicons/calender.png', height: 24),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(
               _dob == null
                   ? "Date of Birth"
@@ -267,12 +272,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       {required Function(String) onChanged}) {
     return Container(
       height: 56,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: _inputDecoration(),
       child: Row(
         children: [
           Image.asset(iconPath, height: 24),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: TextFormField(
               controller: controller,
@@ -291,7 +296,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   }
 
   BoxDecoration _inputDecoration() => BoxDecoration(
-        color: const Color(0xFFF5F5F5),
+        color: Color(0xFFF5F5F5),
         borderRadius: BorderRadius.circular(16),
       );
 
@@ -301,12 +306,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       width: 48,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: const Color(0xFFFF8C8C),
+        color: Color(0xFFFF8C8C),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(unit,
-          style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold)),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
     );
   }
 }

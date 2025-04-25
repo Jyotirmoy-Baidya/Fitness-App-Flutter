@@ -1,3 +1,4 @@
+import 'package:fitness/pages/mainDashboard/pages/ActivityTrackerPage.dart';
 import 'package:flutter/material.dart';
 
 class TodayTargetCard extends StatelessWidget {
@@ -15,7 +16,12 @@ class TodayTargetCard extends StatelessWidget {
         children: [
           Text("Today Target", style: TextStyle(fontWeight: FontWeight.bold)),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ActivityTrackerPage()),
+              );
+            },
             child: Text("Check"),
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFFFFA8A8),

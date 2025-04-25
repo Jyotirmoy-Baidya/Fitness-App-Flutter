@@ -4,6 +4,7 @@ import 'package:fitness/pages/beforeLoginPages/TrackGoalScreen.dart';
 import 'package:fitness/firebase_options.dart';
 import 'package:fitness/pages/beforeLoginPages/first_screen.dart';
 import 'package:fitness/pages/home_page.dart';
+import 'package:fitness/pages/mainDashboard/pages/ActivityTrackerPage.dart';
 import 'package:fitness/pages/mainDashboard/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +36,6 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.red,
         ),
-        home: const FirstScreen());
+        home: FirstScreen());
   }
 }

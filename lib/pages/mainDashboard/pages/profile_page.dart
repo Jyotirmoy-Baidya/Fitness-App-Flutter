@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness/pages/beforeLoginPages/first_screen.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
+import 'package:fitness/pages/mainDashboard/pages/AccountSettingsContainer.dart';
+import 'package:fitness/pages/mainDashboard/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -49,64 +51,69 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFFFF7C7C),
-        centerTitle: true,
-      ),
       backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  const SizedBox(height: 10),
-                  ListTile(
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: const Color(0xFFFF7C7C),
-                      backgroundImage:
-                          FirebaseAuth.instance.currentUser?.photoURL != null
-                              ? NetworkImage(
-                                  FirebaseAuth.instance.currentUser!.photoURL!)
-                              : null,
-                      child: FirebaseAuth.instance.currentUser?.photoURL == null
-                          ? const Icon(Icons.person, color: Colors.white)
-                          : null,
-                    ),
-                    title: Text(
-                      _userData?['name'] ?? 'Hey_279',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    subtitle: Text(
-                      _userData?['email'] ?? 'No program',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    trailing: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFFF7C7C),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+            : SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    Text(
+                      "Profile",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => CompleteProfilePage(
-                                    onComplete: () {},
-                                  )),
-                        );
-                      },
-                      child: const Text("Edit"),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
+                    const SizedBox(height: 16),
+                    ListTile(
+                      leading: CircleAvatar(
+                        radius: 30,
+                        backgroundColor: const Color(0xFFFF7C7C),
+                        backgroundImage: FirebaseAuth
+                                    .instance.currentUser?.photoURL !=
+                                null
+                            ? NetworkImage(
+                                FirebaseAuth.instance.currentUser!.photoURL!)
+                            : null,
+                        child:
+                            FirebaseAuth.instance.currentUser?.photoURL == null
+                                ? const Icon(Icons.person, color: Colors.white)
+                                : null,
+                      ),
+                      title: Text(
+                        _userData?['username'] ?? 'Hey_279',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      subtitle: Text(
+                        _userData?['email'] ?? 'No email',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      trailing: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF7C7C),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => CompleteProfilePage(
+                                      onComplete: () {},
+                                    )),
+                          );
+                        },
+                        child: const Text("Edit"),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _infoCard(
@@ -116,13 +123,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         _infoCard("${_userData?['gender'] ?? '--'}", "Gender"),
                       ],
                     ),
-                  ),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: ElevatedButton(
+                    const SizedBox(height: 20),
+                    AccountSettingsContainer(),
+                    SizedBox(height: 30),
+                    ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFFF7C7C),
+                        backgroundColor: const Color(0xFFFF7C7C),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 32, vertical: 12),
                         shape: RoundedRectangleBorder(
@@ -132,8 +138,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () => _logout(context),
                       child: const Text("Logout"),
                     ),
-                  )
-                ],
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
       ),
     );
@@ -152,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.black12,
               blurRadius: 10,
               offset: Offset(0, 4),
-            )
+            ),
           ],
         ),
         child: Column(
@@ -167,7 +174,10 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             const SizedBox(height: 5),
-            Text(label, style: const TextStyle(color: Colors.grey)),
+            Text(
+              label,
+              style: const TextStyle(color: Colors.grey),
+            ),
           ],
         ),
       ),

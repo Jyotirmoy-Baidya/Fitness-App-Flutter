@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class WelcomePage extends StatelessWidget {
+  final String userName;
+
+  const WelcomePage({super.key, required this.userName});
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final displayName = user?.displayName;
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -23,7 +23,7 @@ class WelcomePage extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  "Welcome, $displayName",
+                  "Welcome, $userName",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,

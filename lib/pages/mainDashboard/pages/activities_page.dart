@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness/pages/mainDashboard/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -88,6 +89,56 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
     }
   }
 
+  Widget _buildActivityTile(Map<String, dynamic> activity) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Image.asset(
+            activity['title'].contains('Drinking')
+                ? 'assets/activity/drinking.png'
+                : 'assets/activity/eating.png',
+            height: 40,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(activity['title'],
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(
+                  timeago.format(activity['timestamp'] ?? DateTime.now()),
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.grey),
+            onSelected: (String value) {
+              if (value == 'delete') {
+                _deleteActivity(activity['id']);
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'delete',
+                child: Text('Delete'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,6 +147,18 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
         title: const Text('Latest Activity',
             style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: const Color(0xFFFF7C7C),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DashboardScreen(
+                        userName: '',
+                      )),
+            );
+          },
+        ),
         centerTitle: true,
       ),
       body: _isLoading
@@ -105,6 +168,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
+
                   // Add Activity Inputs
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -157,58 +221,7 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
                     child: ListView.builder(
                       itemCount: _activities.length,
                       itemBuilder: (context, index) {
-                        final activity = _activities[index];
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10,
-                                offset: Offset(0, 4),
-                              )
-                            ],
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            leading: CircleAvatar(
-                              radius: 24,
-                              backgroundColor: Colors.pink[50],
-                              child: const Icon(
-                                Icons.local_drink,
-                                color: Colors.pinkAccent,
-                              ),
-                            ),
-                            title: Text(
-                              activity['title'],
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              timeago.format(
-                                  activity['timestamp'] ?? DateTime.now()),
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                            trailing: PopupMenuButton<String>(
-                              icon: const Icon(Icons.more_vert,
-                                  color: Colors.grey),
-                              onSelected: (String value) {
-                                if (value == 'delete') {
-                                  _deleteActivity(activity['id']);
-                                }
-                              },
-                              itemBuilder: (BuildContext context) => [
-                                const PopupMenuItem<String>(
-                                  value: 'delete',
-                                  child: Text('Delete'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
+                        return _buildActivityTile(_activities[index]);
                       },
                     ),
                   ),

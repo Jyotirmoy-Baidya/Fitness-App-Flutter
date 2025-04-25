@@ -34,10 +34,11 @@ flutter:
     - assets/images/meditate.png
     - assets/images/google-logo.png
     - assets/images/fitness-lady.png
-    - assets/images/profile.png
+    - assets/profileicons/
     - assets/images/welcome-fitness.png
     - assets/images/home-bubble.png
     - assets/images/bmi-bg.png
     - assets/sleep/
     - assets/icons/
     - assets/images/meal.png
+    - assets/activity/

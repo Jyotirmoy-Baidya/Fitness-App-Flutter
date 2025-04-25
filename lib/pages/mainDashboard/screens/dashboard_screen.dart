@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness/pages/dashboardpages/ProfileFormAfterRegister.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
 import 'package:fitness/pages/mainDashboard/pages/SleepTrackerPage.dart';
 import 'package:fitness/pages/mainDashboard/pages/activities_page.dart';
@@ -85,11 +86,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Welcome Back,", style: TextStyle(color: Colors.grey[600])),
-          Text("Hey_279",
-              style:
-                  const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 5),
           BmiWidget(),
           const SizedBox(height: 12),
           TodayTargetCard(),
@@ -118,7 +114,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
 
     if (!_isProfileComplete) {
-      return CompleteProfilePage(
+      return ProfileFormAfterRegister(
         onComplete: () async {
           setState(() => _isLoading = true);
           await _checkUserProfile();
