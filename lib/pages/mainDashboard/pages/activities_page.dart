@@ -143,30 +143,17 @@ class _ActivitiesPageState extends State<ActivitiesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
-      appBar: AppBar(
-        title: const Text('Latest Activity',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: const Color(0xFFFF7C7C),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DashboardScreen(
-                        userName: '',
-                      )),
-            );
-          },
-        ),
-        centerTitle: true,
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
+                  const SizedBox(height: 20),
+                  Text("Activities",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
                   const SizedBox(height: 10),
 
                   // Add Activity Inputs

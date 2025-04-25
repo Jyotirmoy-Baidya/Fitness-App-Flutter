@@ -4,6 +4,7 @@ import 'package:fitness/pages/dashboardpages/ProfileFormAfterRegister.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
 import 'package:fitness/pages/mainDashboard/containers/WaterIntake.dart';
 import 'package:fitness/pages/mainDashboard/containers/WorkoutTracker.dart';
+import 'package:fitness/pages/mainDashboard/pages/MealScreen.dart';
 import 'package:fitness/pages/mainDashboard/pages/SleepTrackerPage.dart';
 import 'package:fitness/pages/mainDashboard/pages/activities_page.dart';
 import 'package:fitness/pages/mainDashboard/pages/profile_page.dart';
@@ -74,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 1:
         return ActivitiesPage();
       case 2:
-        return SleepTrackerPage();
+        return MealPlannerPage();
       case 3:
         return ProfilePage();
       default:
@@ -88,6 +89,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(height: 10),
           BmiWidget(),
           const SizedBox(height: 12),
           TodayTargetCard(),

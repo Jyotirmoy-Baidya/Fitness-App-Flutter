@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness/pages/beforeLoginPages/first_screen.dart';
 import 'package:fitness/pages/dashboardpages/ProfileFormPages.dart';
-import 'package:fitness/pages/mainDashboard/pages/AccountSettingsContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 

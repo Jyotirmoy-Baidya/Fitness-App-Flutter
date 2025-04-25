@@ -76,7 +76,6 @@ class _BmiWidgetState extends State<BmiWidget> {
                     style:
                         TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
-              const SizedBox(height: 5),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 20),
                 padding: EdgeInsets.all(20),
@@ -107,10 +106,7 @@ class _BmiWidgetState extends State<BmiWidget> {
                           Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [
-                                  Color.fromARGB(0, 0, 0, 0),
-                                  Colors.purpleAccent
-                                ],
+                                colors: [Colors.white, Colors.purpleAccent],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -132,7 +128,7 @@ class _BmiWidgetState extends State<BmiWidget> {
                               child: const Text(
                                 "View More",
                                 style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
